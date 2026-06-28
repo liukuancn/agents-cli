@@ -15,7 +15,7 @@ description: >
 metadata:
   author: Google
   license: Apache-2.0
-  version: 0.6.0
+  version: 0.6.1
   requires:
     bins:
       - agents-cli
@@ -40,29 +40,22 @@ metadata:
 
 ## Registration Modes
 
-### A2A Registration (default)
+### A2A Registration (Cloud Run / GKE)
 
-Every scaffolded agent serves the Agent-to-Agent protocol, so A2A is the default on **every** deployment target — Agent Runtime included. Pass the agent card URL and the command fetches the card and registers it; display name and description default to the card's `name`/`description`.
+Every scaffolded agent serves the Agent-to-Agent protocol. A2A is the default — and only — registration type on **Cloud Run** and **GKE**, which have no reasoning engine, so Gemini Enterprise registers them over A2A. Pass the agent card URL and the command fetches the card and registers it; display name and description default to the card's `name`/`description`.
 
 ```bash
-# A2A on Agent Runtime (card served through the /api passthrough)
-agents-cli publish gemini-enterprise \
-  --agent-card-url "https://us-east1-aiplatform.googleapis.com/reasoningEngines/v1/projects/123456/locations/us-east1/reasoningEngines/789/api/a2a/app/.well-known/agent-card.json" \
-  --gemini-enterprise-app-id projects/123456/locations/global/collections/default_collection/engines/my-app
-
 # A2A on Cloud Run / GKE
 agents-cli publish gemini-enterprise \
   --agent-card-url https://my-service-abc123.us-east1.run.app/a2a/app/.well-known/agent-card.json \
   --gemini-enterprise-app-id projects/123456/locations/global/collections/default_collection/engines/my-app
 ```
 
-Pass `--display-name` / `--description` to override the card defaults. On Agent Runtime, `--agent-card-url` can be omitted when `deployment_metadata.json` is present — see [Auto-Detection from Metadata](#auto-detection-from-metadata).
+Pass `--display-name` / `--description` to override the card defaults. For Agent Runtime, use ADK registration (below).
 
-> **OAuth authorization is not supported yet for A2A on Agent Runtime.** If your agent needs an OAuth authorization (`--authorization-id`), register it as ADK instead (`--registration-type adk`) — Gemini Enterprise invokes it natively via `:streamQuery`, which does support authorizations.
+### ADK Registration (default on Agent Runtime)
 
-### ADK Registration
-
-Opt in with `--registration-type adk` for Agent Runtime agents you want Gemini Enterprise to invoke natively via `:streamQuery` instead of over A2A — also the path to use when the agent needs an OAuth authorization (`--authorization-id`), which A2A on Agent Runtime does not yet support. The agent is registered directly via its reasoning engine resource name.
+This is the **default and recommended registration for Agent Runtime** deployments: Gemini Enterprise invokes the agent natively via `:streamQuery` on its reasoning engine resource, authenticating end-to-end. It's also the path to use when the agent needs an OAuth authorization (`--authorization-id`). The agent is registered directly via its reasoning engine resource name; no agent card URL is needed.
 
 ```bash
 agents-cli publish gemini-enterprise \
@@ -124,9 +117,9 @@ agents-cli publish gemini-enterprise --interactive
 | `--display-name` | `GEMINI_DISPLAY_NAME` | Display name in Gemini Enterprise |
 | `--description` | `GEMINI_DESCRIPTION` | Agent description |
 | `--tool-description` | `GEMINI_TOOL_DESCRIPTION` | Tool description (ADK mode only, defaults to description) |
-| `--registration-type` | `REGISTRATION_TYPE` | `adk` or `a2a` (defaults to `a2a` for scaffolded agents if not set) |
+| `--registration-type` | `REGISTRATION_TYPE` | `adk` or `a2a` (defaults to `adk` on Agent Runtime, `a2a` on Cloud Run / GKE) |
 | `--agent-card-url` | `AGENT_CARD_URL` | Agent card URL for A2A registration |
-| `--deployment-target` | `DEPLOYMENT_TARGET` | `agent_runtime`, `cloud_run`, or `gke` (affects A2A auth method) |
+| `--deployment-target` | `DEPLOYMENT_TARGET` | `agent_runtime`, `cloud_run`, or `gke` (sets the default registration type — ADK on Agent Runtime, A2A on Cloud Run / GKE — and the A2A auth method) |
 | `--project-id` | `GOOGLE_CLOUD_PROJECT` | GCP project ID for billing |
 | `--project-number` | `PROJECT_NUMBER` | GCP project number (used for Gemini Enterprise lookup) |
 | `--authorization-id` | `GEMINI_AUTHORIZATION_ID` | OAuth authorization resource name |
@@ -141,11 +134,10 @@ agents-cli publish gemini-enterprise --interactive
 When `deployment_metadata.json` exists, the command automatically:
 
 - Reads the **agent runtime ID** (`remote_agent_runtime_id`)
-- Determines the **registration type**: defaults to **A2A** on every deployment target, since every scaffolded agent serves A2A. Opt into native ADK invocation (`:streamQuery`) with `--registration-type adk` on Agent Runtime.
-- Constructs the **agent card URL** for A2A registrations on Agent Runtime. The card is served through the Agent Engine `/api` passthrough, so the URL is `https://{location}-aiplatform.googleapis.com/reasoningEngines/v1/{resource}/api/a2a/{agent_directory}/.well-known/agent-card.json` — built from `remote_agent_runtime_id` and `agent_directory` in `deployment_metadata.json` (re-deploy if the metadata predates `agent_directory`).
+- Determines the **registration type**: defaults to **ADK** (native `:streamQuery`) on **Agent Runtime**, and **A2A** on **Cloud Run / GKE** (which have no reasoning engine). Override with `--registration-type`.
 - Determines the **deployment target** for authentication
 
-This means that for the simplest case (an A2A agent on Agent Runtime), you only need to provide the Gemini Enterprise app ID:
+This means that for the simplest case (an agent on Agent Runtime, registered as ADK), you only need to provide the Gemini Enterprise app ID:
 
 ```bash
 agents-cli publish gemini-enterprise \

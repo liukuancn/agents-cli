@@ -22,7 +22,7 @@ Turn your favorite coding assistant into an expert at building and deploying age
 **Agents CLI in Agent Platform** (`agents-cli`) gives your coding agent the skills and commands to build, scale, govern, and optimize enterprise-grade agents — so you don't have to learn every CLI and service yourself.
 
 **Works seamlessly with:**
-[Gemini CLI](https://github.com/google-gemini/gemini-cli) &nbsp;•&nbsp; [Claude Code](https://docs.anthropic.com/en/docs/claude-code) &nbsp;•&nbsp; [Codex](https://github.com/openai/codex) &nbsp;•&nbsp; [Antigravity](https://antigravity.google/) &nbsp;•&nbsp; *and any other coding agent.*
+[Antigravity CLI](https://antigravity.google/) &nbsp;•&nbsp; [Claude Code](https://docs.anthropic.com/en/docs/claude-code) &nbsp;•&nbsp; [Codex](https://github.com/openai/codex) &nbsp;•&nbsp; *and any other coding agent.*
 
 ## Get Started
 
@@ -45,7 +45,7 @@ npx skills add google/agents-cli
 
 ### 2. Open your coding agent
 
-Launch [Gemini CLI](https://github.com/google-gemini/gemini-cli), [Claude Code](https://docs.anthropic.com/en/docs/claude-code), [Codex](https://github.com/openai/codex), or any coding agent you prefer.
+Launch [Antigravity CLI](https://antigravity.google/), [Claude Code](https://docs.anthropic.com/en/docs/claude-code), [Codex](https://github.com/openai/codex), or any coding agent you prefer.
 
 ### 3. Build your first agent
 
@@ -137,7 +137,7 @@ The Google Cloud agent stack that `agents-cli` builds on:
 
 ## FAQ
 
-**Is this an alternative to Gemini CLI, Claude Code, or Codex?**<br>
+**Is this an alternative to Antigravity CLI, Claude Code, or Codex?**<br>
 No. **`agents-cli` is a tool *for* coding agents, not a coding agent itself.** It provides the CLI commands and skills that make your coding agent better at building, evaluating, and deploying ADK agents on Google Cloud.
 
 **How is this different from just using `adk` directly?**<br>

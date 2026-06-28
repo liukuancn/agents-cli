@@ -41,9 +41,10 @@ https://{location}-aiplatform.googleapis.com/reasoningEngines/v1/{resource}/api/
 
 `{agent_directory}` is the app name (the project's `agent_directory`, recorded in
 `deployment_metadata.json`). This is the exact URL `deploy` advertises on
-success, `publish` registers with Gemini Enterprise, and `run` constructs for
-`--mode a2a` against an Agent Runtime URL. All three build it from the shared
-`_agent_runtime_a2a` helper.
+success and `run` constructs for `--mode a2a` against an Agent Runtime URL — both
+authenticate with your Google credentials. On Agent Runtime, `publish` registers
+with **ADK** (`:streamQuery` against the reasoning-engine resource name), not
+this card URL.
 
 ## Deploying
 
@@ -74,7 +75,7 @@ Written by `agents-cli deploy` after a successful deployment:
 }
 ```
 
-Used by: subsequent deploys (update vs create), `agents-cli run --url`, and `agents-cli publish` (to construct the A2A card URL). Cloud Run does not use this file.
+Used by: subsequent deploys (update vs create), `agents-cli run --url`, and `agents-cli publish` (reads the runtime ID for the default ADK registration on Agent Runtime, and constructs the A2A card URL only when A2A registration is explicitly chosen). Cloud Run does not use this file.
 
 If deployment times out but the engine was created, manually populate this file with the engine resource ID.
 

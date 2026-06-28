@@ -846,12 +846,19 @@ def _match_adk_agent(agent: dict, agent_runtime_id: str) -> bool:
     return re_name == agent_runtime_id
 
 
-def _match_a2a_agent(agent: dict, agent_card_url: str) -> bool:
-    """Whether ``agent`` is the A2A registration for ``agent_card_url``."""
+def _match_a2a_agent(agent: dict, card_url: str | None) -> bool:
+    """Whether ``agent``'s stored card has the same ``url`` as ``card_url``.
+
+    Compares the card's ``url`` (the RPC endpoint, e.g. ``.../a2a/<dir>``), not
+    the ``.well-known/agent-card.json`` fetch URL: GE stores the card body, so
+    matching on the fetch URL never hits and re-publish would duplicate.
+    """
+    if not card_url:
+        return False
     a2a_def = agent.get("a2aAgentDefinition") or agent.get("a2a_agent_definition") or {}
     raw_card = a2a_def.get("jsonAgentCard") or a2a_def.get("json_agent_card") or "{}"
     try:
-        return json.loads(raw_card).get("url") == agent_card_url
+        return json.loads(raw_card).get("url") == card_url
     except json.JSONDecodeError:
         return False
 
@@ -1000,7 +1007,7 @@ def register_a2a_agent(
         base_endpoint=base_endpoint,
         headers=headers,
         payload=payload,
-        match=lambda agent: _match_a2a_agent(agent, agent_card_url),
+        match=lambda agent: _match_a2a_agent(agent, agent_card.get("url")),
     )
 
 
@@ -1173,10 +1180,19 @@ def _list_gemini_enterprise_apps(project_id: str | None, interactive: bool) -> N
     console.print(table)
 
 
-def default_registration_type(*, is_a2a: bool, has_agent_card_url: bool) -> str:
-    """A2A when the agent serves an A2A card, otherwise ADK."""
+def default_registration_type(
+    *, deployment_target: str | None, is_a2a: bool, has_agent_card_url: bool
+) -> str:
+    """Pick the Gemini Enterprise registration path.
+
+    An explicit agent card URL forces A2A. Agent Runtime defaults to native ADK
+    invocation (``:streamQuery``); Cloud Run / GKE have no reasoning engine, so
+    they register over A2A.
+    """
     if has_agent_card_url:
         return "a2a"
+    if deployment_target == "agent_runtime":
+        return "adk"
     if is_a2a:
         return "a2a"
     return "adk"
@@ -1365,6 +1381,10 @@ def register_gemini_enterprise(
     if not resolved_registration_type:
         if provided_agent_card_url or metadata:
             resolved_registration_type = default_registration_type(
+                deployment_target=(
+                    deployment_target
+                    or (metadata.get("deployment_target") if metadata else None)
+                ),
                 is_a2a=metadata.get("is_a2a", False) if metadata else False,
                 has_agent_card_url=bool(provided_agent_card_url),
             )
@@ -1433,6 +1453,15 @@ def register_gemini_enterprise(
                 metadata.get("deployment_target", "cloud_run")
                 if metadata
                 else "cloud_run"
+            )
+
+        if deployment_target == "agent_runtime":
+            logging.warning(
+                "A2A registration on Agent Runtime is not recommended for "
+                "Gemini Enterprise; prefer ADK registration "
+                "(--registration-type adk), which Gemini Enterprise invokes "
+                "natively via :streamQuery. Proceeding because A2A was requested "
+                "explicitly."
             )
     else:
         # ADK mode - no agent_card_url needed

@@ -180,7 +180,7 @@ def cmd_setup(*, workspace, skip_auth, dry_run, dev, interactive, skills_source,
     """Install agents-cli and skills to detected coding agents.
 
     Installs the agents-cli tool (via uv tool install) and detects
-    installed coding agents (Claude Code, Gemini CLI, Cursor,
+    installed coding agents (Claude Code, Antigravity CLI, Cursor,
     Windsurf, etc.) to install ADK development skills via npx skills.
 
     By default, skills are installed globally for all detected agents.

@@ -12,7 +12,7 @@ description: >
 metadata:
   author: Google
   license: Apache-2.0
-  version: 0.6.0
+  version: 0.6.1
   requires:
     bins:
       - agents-cli
@@ -23,11 +23,11 @@ metadata:
 
 > **STOP — Do NOT write code yet.** If no project exists, scaffold first with `agents-cli scaffold create <name>`. If the user already has code, use `agents-cli scaffold enhance .` to add the agents-cli structure. Run `agents-cli info` to check if a project already exists. Skipping this leads to missing eval boilerplate, CI/CD config, and project conventions.
 
-**agents-cli** is a CLI and skills toolkit for building, evaluating, and deploying agents on Google Cloud using the [Agent Development Kit (ADK)](https://adk.dev/). It works with any coding agent — Gemini CLI, Claude Code, Codex, or others. Install with `uvx google-agents-cli setup`.
+**agents-cli** is a CLI and skills toolkit for building, evaluating, and deploying agents on Google Cloud using the [Agent Development Kit (ADK)](https://adk.dev/). It works with any coding agent — Antigravity CLI, Claude Code, Codex, or others. Install with `uvx google-agents-cli setup`.
 
 
-> Requires: google-agents-cli ~= 0.6.0
-> If version is behind, run: uv tool install "google-agents-cli~=0.6.0"
+> Requires: google-agents-cli ~= 0.6.1
+> If version is behind, run: uv tool install "google-agents-cli~=0.6.1"
 
 > Check version: agents-cli info
 > [Install uv](https://docs.astral.sh/uv/getting-started/installation/index.md) first if needed.

@@ -6,14 +6,13 @@ agents-cli sits on top of multiple tools, each with its own authentication needs
 
 ## Level 1: Coding Agent Auth
 
-Your coding agent (Gemini CLI, Claude Code, Codex, etc.) needs its own authentication to function. **agents-cli does not control this** — each agent handles its own credentials.
+Your coding agent (Antigravity CLI, Claude Code, Codex, etc.) needs its own authentication to function. **agents-cli does not control this** — each agent handles its own credentials.
 
 | Coding Agent | How to authenticate |
 |-------------|---------------------|
-| [Gemini CLI](https://github.com/google-gemini/gemini-cli) | Google account — runs `gcloud auth login` on first use |
+| [Antigravity CLI](https://antigravity.google/) | Google account |
 | [Claude Code](https://docs.anthropic.com/en/docs/claude-code) | Anthropic account or API key |
 | [Codex](https://github.com/openai/codex) | OpenAI API key |
-| [Antigravity](https://antigravity.google/) | Google account |
 
 Refer to your coding agent's documentation for setup instructions. This is independent of agents-cli.
 

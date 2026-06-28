@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.1] - 2026-06-28
+- `publish gemini-enterprise` now registers Agent Runtime deployments via ADK by default, which Gemini Enterprise invokes natively and reliably. A2A registration remains the default for Cloud Run and GKE; requesting A2A on Agent Runtime now warns and recommends ADK. Re-publishing an A2A agent no longer creates duplicate registrations, and A2A agent cards now carry the correct public URL on the first deploy.
+- `agents-cli update` now exits non-zero and clearly reports when a skill fails to update, instead of always printing a misleading green "Skills updated." banner. Also fixes failure messages rendering in the wrong color on Windows PowerShell.
+- Refreshed the generated project `uv.lock` files for all templated agents, updating bundled `google-adk` from 2.2.0 to 2.3.0.
+
 ## [0.6.0] - 2026-06-23
 - Agent Runtime deploys now serve ADK web, A2A, and the reasoning engine from a single unified container app.
 - Cloud Trace spans no longer capture LLM prompts and responses, keeping sensitive content out of traces.

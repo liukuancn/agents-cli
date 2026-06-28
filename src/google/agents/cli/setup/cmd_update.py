@@ -50,8 +50,11 @@ def cmd_update(workspace, yes, interactive):
         for line in link_skills_for_antigravity():
             click.echo(f"  {line}")
 
+    # Only reached if run_npx_skills did not raise (i.e. all skills updated
+    # successfully). Avoid bold colors here: bold-bright-green renders as
+    # hard-to-read white-on-green in some Windows terminals (see b/525049570).
     click.echo()
-    click.secho("Skills updated.", fg="green", bold=True)
+    click.secho("✓ Skills updated.", fg="green")
 
     # Best-effort CLI upgrade
     click.echo()

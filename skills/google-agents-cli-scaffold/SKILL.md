@@ -12,7 +12,7 @@ description: >
 metadata:
   author: Google
   license: Apache-2.0
-  version: 0.6.0
+  version: 0.6.1
   requires:
     bins:
       - agents-cli
@@ -73,7 +73,7 @@ agents-cli scaffold create <project-name> \
 **Constraints:**
 - Project name must be **26 characters or less**, lowercase letters, numbers, and hyphens only.
 - Do NOT `mkdir` the project directory before running `create` — the CLI creates it automatically. If you mkdir first, `create` will fail or behave unexpectedly.
-- Auto-detect the guidance filename based on the IDE you are running in and pass `--agent-guidance-filename` accordingly (`GEMINI.md` for Gemini CLI, `CLAUDE.md` for Claude Code, `AGENTS.md` for OpenAI Codex/other).
+- Auto-detect the guidance filename based on the IDE you are running in and pass `--agent-guidance-filename` accordingly (`AGENTS.md` for Antigravity CLI/OpenAI Codex/other, `CLAUDE.md` for Claude Code, `GEMINI.md` for Gemini CLI).
 - When enhancing an existing project, check where the agent code lives. If it's not in `app/`, pass `--agent-directory <dir>` (e.g. `--agent-directory agent`). Getting this wrong causes enhance to miss or misplace files.
 
 ### Reference Files

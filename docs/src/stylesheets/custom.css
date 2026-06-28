@@ -1342,7 +1342,7 @@ nav.md-nav--primary .md-nav__item--section > .md-nav__link {
 }
 
 .tabbed-labels label[for$="_1"]::before {
-  background-image: url("../assets/logos/gemini.png");
+  background-image: url("../assets/logos/antigravity.png");
 }
 
 .tabbed-labels label[for$="_2"]::before {
@@ -1358,10 +1358,6 @@ nav.md-nav--primary .md-nav__item--section > .md-nav__link {
 }
 
 .tabbed-labels label[for$="_4"]::before {
-  background-image: url("../assets/logos/antigravity.png");
-}
-
-.tabbed-labels label[for$="_5"]::before {
   display: none;
 }
 

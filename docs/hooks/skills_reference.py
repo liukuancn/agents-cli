@@ -22,7 +22,7 @@ OUTPUT_FILE = Path(__file__).resolve().parent.parent / "src" / "reference" / "sk
 
 HEADER = """# Skills Reference
 
-Skills are context files installed to coding agents (Gemini CLI, Claude Code, GitHub Copilot) via `agents-cli setup`. They provide domain-specific guidance for working with generated agent projects.
+Skills are context files installed to coding agents (Antigravity CLI, Claude Code, GitHub Copilot) via `agents-cli setup`. They provide domain-specific guidance for working with generated agent projects.
 
 ```bash
 agents-cli setup      # Install all skills
@@ -58,11 +58,9 @@ def _clean_description(desc: str) -> str:
     # Remove leading preamble up to the actual description.
     # Descriptions follow the pattern: routing text. Actual description.
     # Split on first sentence that starts with a capital and isn't the preamble.
-    match = re.search(
-        r"(?:Covers |Always active|It provides |Provides )", desc
-    )
+    match = re.search(r"(?:Covers |Always active|It provides |Provides )", desc)
     if match:
-        desc = desc[match.start():]
+        desc = desc[match.start() :]
     # Remove trailing ">" from YAML folded strings
     desc = desc.strip().rstrip(">").strip()
     # Capitalize first letter

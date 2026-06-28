@@ -4,7 +4,7 @@
 
 It works two ways:
 
-1. **With a coding agent** — install skills into Gemini CLI, Claude Code, Codex, or others. Your coding agent uses them to make the right decisions at every step.
+1. **With a coding agent** — install skills into Antigravity CLI, Claude Code, Codex, or others. Your coding agent uses them to make the right decisions at every step.
 2. **Without a coding agent** — run CLI commands directly from your terminal. Every command works standalone.
 
 Agents CLI bundles **7 skills** that give your coding agent deep knowledge across the full ADK lifecycle:
@@ -64,21 +64,15 @@ See [Authentication](authentication.md) for full details.
 
 ## Start Building with Your Coding Agent
 
-=== "Gemini CLI"
+=== "Antigravity CLI"
 
-    1. **Open Gemini CLI**
+    1. **Open Antigravity CLI**
 
-        ```bash
-        gemini
-        ```
+        Launch Antigravity from your IDE or terminal.
 
     2. **Verify skills are installed**
 
-        ```
-        /skills
-        ```
-
-        You should see `google-agents-cli-workflow` and other Agents CLI skills listed.
+        Check that Agents CLI skills are available in your environment.
 
     3. **Ask it to build something**
 
@@ -86,7 +80,7 @@ See [Authentication](authentication.md) for full details.
         Build a support agent that answers questions from our docs
         ```
 
-        Gemini will use the installed skills to scaffold, build, and evaluate your agent.
+        Antigravity will use the installed skills to scaffold, build, and evaluate your agent.
 
 === "Claude Code"
 
@@ -131,24 +125,6 @@ See [Authentication](authentication.md) for full details.
         ```
 
         Codex will use the installed skills to scaffold, build, and evaluate your agent.
-
-=== "Antigravity"
-
-    1. **Open Antigravity**
-
-        Launch Antigravity from your IDE or terminal.
-
-    2. **Verify skills are installed**
-
-        Check that Agents CLI skills are available in your environment.
-
-    3. **Ask it to build something**
-
-        ```
-        Build a support agent that answers questions from our docs
-        ```
-
-        Antigravity will use the installed skills to scaffold, build, and evaluate your agent.
 
 === "Any Other Agent"
 

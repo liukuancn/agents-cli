@@ -124,7 +124,7 @@ Default evaluation cases. Each case defines a user message and the session conte
 
 ### `GEMINI.md`
 
-A guidance file that coding agents (Gemini CLI, Claude Code, etc.) read automatically. It contains project-specific instructions — ADK patterns, coding conventions, and workflow guidance. You don't need to read or edit this file unless you want to customize how coding agents work with your project.
+A guidance file that coding agents (Antigravity CLI, Claude Code, etc.) read automatically. It contains project-specific instructions — ADK patterns, coding conventions, and workflow guidance. You don't need to read or edit this file unless you want to customize how coding agents work with your project.
 
 ### `.env`
 

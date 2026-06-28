@@ -1,6 +1,6 @@
 # Skills Reference
 
-Skills are context files installed to coding agents (Gemini CLI, Claude Code, GitHub Copilot) via `agents-cli setup`. They provide domain-specific guidance for working with generated agent projects.
+Skills are context files installed to coding agents (Antigravity CLI, Claude Code, GitHub Copilot) via `agents-cli setup`. They provide domain-specific guidance for working with generated agent projects.
 
 ```bash
 agents-cli setup      # Install all skills

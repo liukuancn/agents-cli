@@ -27,7 +27,7 @@ Agent generated with `agents-cli` version `{{ cookiecutter.package_version }}`
 └── pyproject.toml             # Project dependencies
 ```
 
-> 💡 **Tip:** Use [Gemini CLI](https://github.com/google-gemini/gemini-cli) for AI-assisted development - project context is pre-configured in `GEMINI.md`.
+> 💡 **Tip:** Use [Antigravity CLI](https://antigravity.google/) for AI-assisted development - project context is pre-configured in `GEMINI.md`.
 
 ## Requirements
 

@@ -15,6 +15,7 @@
 """Tool resolution utilities."""
 
 import os
+import re
 import shlex
 import shutil
 import subprocess
@@ -24,6 +25,13 @@ from pathlib import Path
 import click
 
 _tool_paths: dict[str, str] = {}
+
+# Matches ANSI escape sequences (CSI/SGR), used to scrub any residual color
+# codes from captured subprocess output. We disable color at the source via
+# NO_COLOR/FORCE_COLOR, but strip defensively in case the tool emits them anyway
+# (e.g. on Windows PowerShell, where embedded escapes have caused error lines
+# to render as the previous line's color — see b/525049570).
+_ANSI_RE = re.compile(r"\x1b\[[0-9;?]*[a-zA-Z]")
 
 _GCLOUD_RELATIVE_PATH = (
     Path("Google") / "Cloud SDK" / "google-cloud-sdk" / "bin" / "gcloud.cmd"
@@ -148,10 +156,17 @@ def run_npx_skills(args: list[str], spinner_msg: str) -> list[str]:
     All non-noise lines are printed immediately. Only concise summary
     lines (e.g. "Installed 6 skills", "Found 6 skills") are collected
     for the end summary.
+
+    Failure lines (e.g. "✗ Failed to update <skill>") are re-colored red and
+    counted; if any are observed the command raises even when npx itself
+    exits 0, since `npx skills update` reports per-skill failures via stdout
+    but still exits cleanly.
+
     Returns:
         A list of summary-worthy lines (short, no decorative content).
     Raises:
-        click.ClickException: If the npx process exits non-zero.
+        click.ClickException: If the npx process exits non-zero, or if any
+            per-skill failures were observed in the streamed output.
     """
     from google.agents.cli._runner import popen_resolved
     from google.agents.cli._skills_check import SKILLS_NPX_PACKAGE
@@ -159,7 +174,16 @@ def run_npx_skills(args: list[str], spinner_msg: str) -> list[str]:
     full_args = ["npx", "-y", SKILLS_NPX_PACKAGE, *args]
     click.secho(f"  \u25b8 {shlex.join(full_args)}", fg="cyan", dim=True)
 
-    summary_lines = []
+    # Disable color in the child process. We re-emit each captured line via
+    # click.echo, so any ANSI sequences from the child would either render as
+    # literal escape codes or, on Windows PowerShell, bleed across line
+    # boundaries — causing error lines to inherit the previous line's color
+    # (e.g. green progress markers making "Failed to update" appear green).
+    # See b/525049570.
+    child_env = {**os.environ, "NO_COLOR": "1", "FORCE_COLOR": "0"}
+
+    summary_lines: list[str] = []
+    failure_lines: list[str] = []
     # Leave stderr attached to the terminal (stderr=None) rather than capturing
     # it. We only ever echo stderr, so piping it would just add a second stream
     # we'd have to drain concurrently to avoid a pipe-buffer deadlock.
@@ -170,12 +194,15 @@ def run_npx_skills(args: list[str], spinner_msg: str) -> list[str]:
         text=True,
         encoding="utf-8",
         errors="replace",
+        env=child_env,
     )
 
     # Read stdout line-by-line
     assert proc.stdout is not None
     for line in proc.stdout:
-        stripped = line.strip()
+        # Defensively strip any leaked ANSI escape sequences so we control how
+        # the line renders.
+        stripped = _ANSI_RE.sub("", line).strip()
         if not stripped:
             continue
         # Skip npx download/cache noise
@@ -184,8 +211,10 @@ def run_npx_skills(args: list[str], spinner_msg: str) -> list[str]:
         # Skip ASCII art banners (block characters)
         if any(ch in stripped for ch in "█╗╔║╚╝"):
             continue
-        # Strip leading box-drawing / bullet prefixes to extract text
-        clean = stripped.lstrip("┌┐└┘├┤│◇●◆✓─╮╯ ")
+        # Strip leading box-drawing / bullet / status-glyph prefixes to extract
+        # text. We intentionally also strip "✗" so we can re-emit the line with
+        # our own (correct) red coloring below.
+        clean = stripped.lstrip("┌┐└┘├┤│◇●◆✓✗─╮╯ ")
         if not clean:
             continue
         # Skip per-agent detail lines
@@ -194,7 +223,17 @@ def run_npx_skills(args: list[str], spinner_msg: str) -> list[str]:
         # Skip purely decorative headers (e.g. "Installation Summary ────")
         if "──" in clean:
             continue
-        click.echo(f"  {clean}")
+
+        # Detect per-skill failures. npx skills reports these as
+        # "✗ Failed to update <skill>" followed by a "Failed to update N
+        # skill(s)" summary line. Either form is a hard failure for us.
+        is_failure = clean.startswith("Failed ") or "Failed to update" in clean
+        if is_failure:
+            failure_lines.append(clean)
+            click.secho(f"  ✗ {clean}", fg="red")
+        else:
+            click.echo(f"  {clean}")
+
         # Collect concise summary-worthy lines for the recap
         if len(clean) < 80 and clean.startswith(
             ("Installed", "Found", "Done", "Removed", "Updated")
@@ -206,5 +245,12 @@ def run_npx_skills(args: list[str], spinner_msg: str) -> list[str]:
     if proc.returncode != 0:
         # stderr already streamed to the terminal above.
         raise click.ClickException("npx skills failed")
+
+    if failure_lines:
+        # npx skills exits 0 even when individual skill operations fail, so we
+        # surface those failures as a non-zero exit ourselves.
+        raise click.ClickException(
+            f"npx skills reported {len(failure_lines)} failure(s); see output above."
+        )
 
     return summary_lines

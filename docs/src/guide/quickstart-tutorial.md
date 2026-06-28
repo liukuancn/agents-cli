@@ -20,7 +20,7 @@ The only command you run yourself. Everything else goes through your coding agen
 uvx google-agents-cli setup
 ```
 
-Then open your coding agent — [Gemini CLI](https://github.com/google-gemini/gemini-cli), [Claude Code](https://docs.anthropic.com/en/docs/claude-code), [Codex](https://github.com/openai/codex), or any other.
+Then open your coding agent — [Antigravity CLI](https://antigravity.google/), [Claude Code](https://docs.anthropic.com/en/docs/claude-code), [Codex](https://github.com/openai/codex), or any other.
 
 ---
 

@@ -27,7 +27,7 @@ This project is organized as follows:
 └── vitest.config.ts     # Vitest test configuration
 ```
 
-> 💡 **Tip:** Use [Gemini CLI](https://github.com/google-gemini/gemini-cli) for AI-assisted development - project context is pre-configured in `GEMINI.md`.
+> 💡 **Tip:** Use [Antigravity CLI](https://antigravity.google/) for AI-assisted development - project context is pre-configured in `GEMINI.md`.
 
 ## Requirements
 
@@ -93,7 +93,7 @@ This template follows a "bring your own agent" approach - you focus on your busi
 4. **Deploy:** Set up and initiate the CI/CD pipelines, customizing tests as necessary. Refer to the [deployment section](#deployment) for comprehensive instructions. For streamlined infrastructure deployment, simply run `uvx google-agents-cli infra cicd`. Currently supports GitHub with both Google Cloud Build and GitHub Actions as CI/CD runners.
 5. **Monitor:** Track performance and gather insights using BigQuery telemetry data, Cloud Logging, and Cloud Trace to iterate on your application.
 
-The project includes a `GEMINI.md` file that provides context for AI tools like Gemini CLI when asking questions about your template.
+The project includes a `GEMINI.md` file that provides context for AI tools like Antigravity CLI when asking questions about your template.
 
 
 ## Deployment

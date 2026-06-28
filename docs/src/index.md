@@ -23,10 +23,9 @@ hide:
     <div class="works-with">
       <p class="works-with-text">Works with your coding agent</p>
       <div class="works-with-logos">
-        <a href="https://github.com/google-gemini/gemini-cli" title="Gemini CLI" target="_blank" rel="noopener noreferrer"><img src="assets/logos/gemini.png" alt="Gemini CLI"></a>
+        <a href="https://antigravity.google/" title="Antigravity CLI" target="_blank" rel="noopener noreferrer"><img src="assets/logos/antigravity.png" alt="Antigravity CLI"></a>
         <a href="https://docs.anthropic.com/en/docs/claude-code" title="Claude Code" target="_blank" rel="noopener noreferrer"><img src="assets/logos/claude.png" alt="Claude Code"></a>
         <a href="https://github.com/openai/codex" title="Codex" target="_blank" rel="noopener noreferrer"><img src="assets/logos/openai.svg" alt="Codex"></a>
-        <a href="https://antigravity.google/" title="Antigravity" target="_blank" rel="noopener noreferrer"><img src="assets/logos/antigravity.png" alt="Antigravity"></a>
         <span class="works-with-more">& more</span>
       </div>
     </div>
